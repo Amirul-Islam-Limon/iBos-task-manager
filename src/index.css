@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.btn {
+  @apply rounded-xl h-10 px-4 grid place-content-center font-semibold  transition-all;
+}
+
+.btn-primary {
+  @apply bg-primary border-none text-white hover:bg-primary hover:border-primary;
+}
+
+.btn-danger {
+  @apply bg-red-500 text-white;
+}
+.btn-accent {
+  @apply bg-[#3A4256] text-white hover:bg-[#2d3444] border-[#3A4256] hover:border-[#3A4256];
+}
+.btn-accent-outline{
+  @apply bg-white text-[#3A4256] border-[#3A4256] hover:bg-[#3A4256] hover:text-white;
+}
