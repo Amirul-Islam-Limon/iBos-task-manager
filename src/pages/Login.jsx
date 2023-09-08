@@ -2,6 +2,7 @@ import { useContext} from 'react';
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthProvider';
 // import { AuthContext } from '../../context/AuthProvider';
 
 const Login = () => {
@@ -11,21 +12,22 @@ const Login = () => {
     // const { loginWithEmailAndPassword, loginWithGoogle } = useContext(AuthContext)
     const navigate = useNavigate();
 
+    const {loginWithEmailAndPass} = useContext(AuthContext)
 
-    // const handleLogin = (data) => {
-    //     setLoginError("")
-    //     loginWithEmailAndPassword(data.email, data.password)
-    //         .then(result => {
-    //             const user = result.user;
-    //             setLoginUserEmail(user.email);
-    //             console.log(user);
-    //         })
-    //         .catch(error => {
-    //             console.log(error.message)
-    //             setLoginError(error.message)
-    //         })
-    //     console.log(data);
-    // }
+
+    const handleLogin = (data) => {
+        setLoginError("")
+        loginWithEmailAndPass(data.email, data.password)
+            .then(result => {
+                const user = result.user;
+                console.log(user);
+            })
+            .catch(error => {
+                console.log(error.message)
+                setLoginError(error.message)
+            })
+        console.log(data);
+    }
 
     // const handleGoogleLogIn = () => {
     //     loginWithGoogle()
@@ -42,9 +44,7 @@ const Login = () => {
         <div className='h-[550px] flex justify-center items-center'>
             <div className='w-96'>
                 <h2 className='text-4xl font-semibold text-center'>Login</h2>
-                {/* <form onSubmit={handleSubmit(handleLogin)}> */}
-                <form>
-                    
+                <form onSubmit={handleSubmit(handleLogin)}>                    
                     <div className="form-control">
                     <label className="label">
                         <span className="label-text">Email</span>

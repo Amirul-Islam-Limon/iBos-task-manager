@@ -1,15 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../ui/Modal";
 import { useForm } from "react-hook-form"
 
 const AddTaskModal = ({isOpen, setIsOpen}) => {
     const { register, handleSubmit, reset } = useForm();
+    const [registeredUsersName, setRegisteredUsersName] = useState([]);
 
 
+    useEffect(() => {
+        const allUser = JSON.parse(localStorage.getItem("task-manager-users"));
+        const allUserName = allUser?.map(user => user.name);
+        setRegisteredUsersName(allUserName)
+    }, [])
+    
     const onSubmit = (data) => {
         console.log(data);
+        data.status = "pending";
+        data.id = Math.ceil(Math.random() * 100000000000);
+        saveAssignedTaskToLocalStorage(data);
         setIsOpen(!isOpen);
-        reset();
+        // reset();
     }
 
     const closeModal = () => {
@@ -19,6 +29,13 @@ const AddTaskModal = ({isOpen, setIsOpen}) => {
 
     const openModal = () => {
         setIsOpen(!isOpen)
+    }
+
+    const saveAssignedTaskToLocalStorage = (currentTask) => {
+        
+        const previousAddedTasks = JSON.parse(localStorage.getItem('assigned-tasks')) || [];
+        const updatedTasks = [...previousAddedTasks, currentTask];
+        localStorage.setItem("assigned-tasks", JSON.stringify(updatedTasks)); 
     }
     
     return (
@@ -40,8 +57,9 @@ const AddTaskModal = ({isOpen, setIsOpen}) => {
                     <div className="flex flex-col gap-3">
                         <label htmlFor="title">Assign to</label>
                         <select className="form-select px-4 py-3 rounded-md" {...register("assignedTo")}>
-                            <option value="Amirul Islam">Amirul Islam</option>
-                            <option value="Limon Ahmed">Limon Ahmed</option>
+                            {
+                                registeredUsersName?.map((name, index) => <option key={index} value={name}>{ name}</option>)
+                            }
                         </select>
                     </div>
                     <div className="flex flex-col gap-3">

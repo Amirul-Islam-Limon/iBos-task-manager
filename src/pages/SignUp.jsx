@@ -2,8 +2,9 @@ import { useContext } from 'react';
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthProvider';
 // import { AuthContext } from '../../context/AuthProvider';
-// import Swal from 'sweetalert2'
+import Swal from 'sweetalert2'
 // import withReactContent from 'sweetalert2-react-content'
 
 const SignUp = () => {
@@ -12,49 +13,84 @@ const SignUp = () => {
     // const [data, setData] = useState("");
     const [signUpError, setSignUpError] = useState("");
     // const {createUserByEmailPassword, updateUserProfile} = useContext(AuthContext)
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     // const MySwal = withReactContent(Swal)
+    const { createUserByEmailAndPass, updateUserProfile } = useContext(AuthContext);
 
 
 
-    const handleRegister = (data) => {
-        setSignUpError("");
+    const handleRegister = async(data) => {        
+        const name = data.name;
+        const email = data.email;
+        const password = data.password;
+        const photo = data.photo[0];
+        const bio = data.bio;
+        // console.log(data);
+
+        // saveUserToLocalStorage(name, email, bio);
+
+        const formData = new FormData();
+        formData.append("image", photo);
+        const apiKey = "a6c879c944962e5dac253974ab5ec689"
         
-        console.log(data);
+        const url = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+        const res = await fetch(url, {
+            method: "POST",
+            body:formData
+        });
+        const imageData = await res.json();
+        
+        if (imageData.data.url) {
+            const updateUserProfileInfo = {
+                displayName: name,
+                photoURL: imageData.data.url,
+                bio:bio
+            }
+            createUserByEmailAndPass(email, password)
+                .then(result => {
+                    const user = result.user;
+                    console.log(user)
+                    updateUserProfile(updateUserProfileInfo)
+                        .then(() => {
+                            console.log("User Profile Updated");
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'User Created Successfully',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            saveUserToLocalStorage(name, email, bio)
+                            navigate("/");
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        })
+                .catch(error => {
+                    console.log(error.message)
+                    setSignUpError(error.message)
+                })
+            })
+        }   
+
     }
 
-    // const saveUser = (name, email) => {
-    //     const user = { name, email };
-    //     fetch('https://doctors-portal-server-kappa-bice.vercel.app/users', {
-    //         method: "POST",
-    //         headers: {
-    //             "content-type":"application/json"
-    //         },
-    //         body: JSON.stringify(user)
-    //     })
-    //         .then(res => res.json())
-    //         .then(data => {
-    //             setCreatedUserEmail(email);  
-    //     })
-    // }
 
+    const saveUserToLocalStorage = (name, email, bio) => {
+        
+        const userInfo = { name: name, email: email, bio: bio }
+        const previousAddedUsers = JSON.parse(localStorage.getItem('task-manager-users')) || [];
+        const updatedUsers = [...previousAddedUsers, userInfo];
+        localStorage.setItem("task-manager-users", JSON.stringify(updatedUsers)); 
+    }
 
-    // Swal.fire({
-    //     position: 'top-end',
-    //     icon: 'success',
-    //     title: 'User Created Successfully',
-    //     showConfirmButton: false,
-    //     timer: 1500
-    //     })
 
     return (
-        <div className='h-[550px] flex justify-center items-center'>
+        <div className='my-12 flex justify-center items-center'>
             <div className='w-96'>
                 <h2 className='text-4xl font-semibold text-center'>Registration</h2>
-                {/* <form onSubmit={handleSubmit(handleSignIn)}> */}
-                <form onSubmit={""}>
-                    
+                <form onSubmit={handleSubmit(handleRegister)}>                    
                     <div className="form-control">
                     <label className="label">
                         <span className="label-text">Name</span>
@@ -89,6 +125,14 @@ const SignUp = () => {
                     </label>
                         <input type="file" className={`w-full bg-primary rounded text-white ${errors.photo && "border-red-400"}`} {...register('photo', { required: 'photo is required', })} />
                         {errors.photo && <p className='text-red-600' role="alert">{errors.photo?.message}</p>}
+                    </div>
+
+                    <div className="form-control">
+                    <label className="label">
+                        <span className="label-text">Bio</span>
+                    </label>
+                        <textarea type="text" className={`textarea textarea-sm  textarea-bordered ${errors.bio && "border-red-400"}`} {...register('bio', { required: 'bio is required',  message: 'bio is required', }, )} />
+                        {errors.email && <p className='text-red-600' role="alert">{errors.bio?.message}</p>}
                     </div>
                     
                     

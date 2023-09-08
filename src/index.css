@@ -19,3 +19,6 @@
 .btn-accent-outline{
   @apply bg-white text-[#3A4256] border-[#3A4256] hover:bg-[#3A4256] hover:text-white;
 }
+.text-primary{
+  @apply text-[#E91E63]
+}
