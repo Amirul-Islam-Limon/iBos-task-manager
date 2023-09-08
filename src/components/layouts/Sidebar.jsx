@@ -1,4 +1,4 @@
-import {SquaresPlusIcon, Cog6ToothIcon, ChatBubbleOvalLeftEllipsisIcon, UserCircleIcon, LockOpenIcon, LockClosedIcon} from '@heroicons/react/24/solid';
+import {SquaresPlusIcon, Cog6ToothIcon, ChatBubbleOvalLeftEllipsisIcon, UserCircleIcon, LockOpenIcon, LockClosedIcon, UserPlusIcon} from '@heroicons/react/24/solid';
 
 import logo from '../../assets/image/logo.png';
 import { Link, NavLink } from 'react-router-dom';
@@ -39,14 +39,14 @@ const Sidebar = () => {
           <ChatBubbleOvalLeftEllipsisIcon className="h-7 w-7 group-hover:text-white " />
         </NavLink>
         <NavLink
-          to="/settings"
+          to="/create-team"
           className={({ isActive }) =>
             isActive
               ? 'p-2 rounded-2xl bg-primary text-white cursor-pointer'
               : 'p-2 rounded-2xl group hover:bg-primary text-primary cursor-pointer transition-all'
           }
         >
-          <Cog6ToothIcon className="h-7 w-7 group-hover:text-white " />
+          <UserPlusIcon className="h-7 w-7 group-hover:text-white " />
         </NavLink>
         <NavLink title="profile"
           to="/profile"
@@ -61,7 +61,7 @@ const Sidebar = () => {
         
         {
           user?.email? <NavLink title="log out"
-            // to="/login"
+            to="/login"
             onClick={handleLogOut}
             className={({ isActive }) =>
               isActive

@@ -2,10 +2,10 @@ import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
 import Tasks from '../pages/Tasks';
 import Chat from '../pages/Chat';
-import Settings from '../pages/Settings';
 import Profile from '../pages/Profile';
 import Login from '../pages/Login';
 import SignUp from '../pages/SignUp';
+import CreateTeam from '../pages/CreateTeam';
 const routes = createBrowserRouter([
   {
     path: '/',
@@ -20,8 +20,8 @@ const routes = createBrowserRouter([
         element: <Chat />,
       },
       {
-        path: '/settings',
-        element: <Settings />,
+        path: '/create-team',
+        element: <CreateTeam/>,
       },
       {
         path: '/profile',

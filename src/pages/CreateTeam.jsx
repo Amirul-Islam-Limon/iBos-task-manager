@@ -1,23 +1,22 @@
+import { BellIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import MyTasks from '../components/tasks/MyTasks';
+import TaskCard from '../components/tasks/TaskCard';
+import Modal from '../components/ui/Modal';
 import { useContext, useEffect, useState } from 'react';
-import AddTaskModal from '../components/tasks/AddTaskModal';
+// import AddTaskModal from '../components/tasks/AddTaskModal';
 import { AuthContext } from '../context/AuthProvider';
 import { UserCircleIcon } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom';
 import TestCard from '../components/tasks/TaskCard1';
+import CreateTeamModal from '../components/ui/CreateTeamModal';
 
 
-const Tasks = () => {
+const CreateTeam = () => {
   const { user } = useContext(AuthContext);
   const [taskAssignedToMe, setTaskAssignedToMe] = useState([])
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-      const allTask = JSON.parse(localStorage.getItem("assigned-tasks"));
-      const allTaskAssignedToMe = allTask?.filter(task => task.assignedTo == user?.displayName);
-      console.log("before set on state",allTaskAssignedToMe);
-      setTaskAssignedToMe(allTaskAssignedToMe);
-  }, [user?.displayName])
+
 
 
   const pendingTasks = taskAssignedToMe?.filter(task => task.status === "pending");
@@ -43,17 +42,15 @@ const Tasks = () => {
     const otherTask = allTask?.filter(task => task.id !== id);
     const allUpdatedTask = [...otherTask, clickedTask];
     localStorage.setItem("assigned-tasks", JSON.stringify(allUpdatedTask));
-  }
-  
+    }
   return (
     <div className="h-screen grid grid-cols-12">
       <div className="col-span-9 px-10 pt-10">
         <div className="flex justify-between items-center">
           <div>
-            <Link to="create-team"><button className='btn btn-primary'>Team Task</button></Link>
+            <CreateTeamModal isOpen={isOpen} setIsOpen={setIsOpen}>XYZ</CreateTeamModal>
           </div>
           <div className="flex gap-5">
-            <AddTaskModal isOpen={isOpen} setIsOpen={setIsOpen}></AddTaskModal>
             <div className="h-10 w-10 rounded-xl overflow-hidden">
               {
                 user?.photoURL ? <Link to="/profile"><img src={user?.photoURL} alt="" className="object-cover h-full w-full " /></Link> 
@@ -119,10 +116,51 @@ const Tasks = () => {
         </div>
       </div>
       <div className="col-span-3 border-l-2 border-secondary/20 px-10 pt-10">
+        <div>
+          <h1 className="text-xl">Members</h1>
+          <div className="flex gap-3 mt-3">
+            <div className="h-10 w-10 rounded-xl overflow-hidden">
+              <img
+                src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"
+                alt=""
+                className="object-cover h-full w-full "
+              />
+            </div>
+            <div className="h-10 w-10 rounded-xl overflow-hidden">
+              <img
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"
+                alt=""
+                className="object-cover h-full w-full "
+              />
+            </div>
+            <div className="h-10 w-10 rounded-xl overflow-hidden">
+              <img
+                src="https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"
+                alt=""
+                className="object-cover h-full w-full "
+              />
+            </div>
+            <div className="h-10 w-10 rounded-xl overflow-hidden">
+              <img
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"
+                alt=""
+                className="object-cover h-full w-full "
+              />
+            </div>
+            <div className="h-10 w-10 rounded-xl overflow-hidden">
+              <img
+                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"
+                alt=""
+                className="object-cover h-full w-full "
+              />
+            </div>
+          </div>
+        </div>
         <MyTasks />
       </div>
     </div>
   );
 };
 
-export default Tasks;
+
+export default CreateTeam;
